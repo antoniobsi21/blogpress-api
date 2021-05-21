@@ -14,6 +14,32 @@ router.get('/', async (req, res) => {
     } catch(error) {
         res.json({error});
     }
-})
+});
+
+router.get('/:id', async (req, res) => {
+    let id = req.params.id;
+
+    if(id == undefined || isNaN(id)) {
+        res.status(400);
+        res.json({
+            error: 'Invalid id'
+        });
+    } else {
+        let user = await User.findOne({
+            where: {
+                id
+            }
+        });
+        if(user == undefined) {
+            res.status(404);
+            res.json({
+                error: `User with id ${id} doesn't exist.`
+            });
+        } else {
+            res.status(200);
+            res.json(user);
+        }
+    }
+});
 
 module.exports = router;

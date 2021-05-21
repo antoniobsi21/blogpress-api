@@ -9,7 +9,7 @@ function auth(req, res, next) {
     if(authToken == undefined) {
         res.status(401);
         res.json({
-            error: 'Autorização necessária'
+            error: 'Authorization necessary'
         });
     } else {
         const bearer = authToken.split(' ');
@@ -19,7 +19,7 @@ function auth(req, res, next) {
             if(err) {
                 res.status(401);
                 res.json({
-                    error: 'Token inválido'
+                    error: 'Invalid token'
                 });
             } else {
                 req.token = token;

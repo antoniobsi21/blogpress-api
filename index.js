@@ -3,10 +3,7 @@ const app = express();
 const connection = require('./database/database');
 const authMiddleware = require('./middlewares/auth');
 
-require('dotenv/config');
-const port = process.env.PORT;
-const host = process.env.HOST;
-
+// Connect to database
 connection
     .authenticate()
     .then(() => {
@@ -22,17 +19,17 @@ connection
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Auth
+// Auth controller
 const authController = require('./auth/AuthController');
 app.use('/auth', authController);
 
-// Users
+// Users controller
 const usersController = require('./users/UserController');
 app.use('/users', authMiddleware, usersController);
 
-app.get('/', (req, res) => {
-    res.send('Bem vindo');
-})
+require('dotenv/config');
+const port = process.env.PORT;
+const host = process.env.HOST;
 
 app.listen(port, host, () => {
     console.log('Server running');
