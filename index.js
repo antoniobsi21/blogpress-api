@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const connection = require('./database/database');
+const authMiddleware = require('./middlewares/auth');
 
 require('dotenv/config');
 const port = process.env.PORT;
@@ -26,9 +27,8 @@ const authController = require('./auth/AuthController');
 app.use('/auth', authController);
 
 // Users
-// TODO Token authorization
 const usersController = require('./users/UserController');
-app.use('/users', usersController);
+app.use('/users', authMiddleware, usersController);
 
 app.get('/', (req, res) => {
     res.send('Bem vindo');
