@@ -2,7 +2,7 @@
 A API to interact with blogpress application avaible in https://github.com/antoniobsi21/blogpress
 
 ## Requirements
-User the existing `.env` file and set the following fields:
+Use the existing `.env` file and set the following fields:
 
     HOST=localhost
     PORT=3000 # The port that the application will run
@@ -57,3 +57,88 @@ token | string  | The provided user token
     {
         "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhbnRvbmlvc2ZqMjFAZ21haWwuY29tIiwiaWF0IjoxNjIxNDk0MjQ4LCJleHAiOjE2MjE2NjcwNDh9.b8Inq-SUoB_xpk8_nmxdBiBsJSyL8S_9-xhoPc7U1H0"
     }
+
+# Users
+
+Users resource
+
+## Get all
+This endpoint return a list of users in the database.
+### Request
+`GET /users`
+
+### Headers
+
+    Authorization: 'Bearer <authorizationtoken>'
+
+### Responses
+#### Status
+* **200** - Ok!
+* **401** - Authorization necessary or token invalid.
+
+#### Content
+Each user on the list contain the following fields:
+
+Field    |   Type  | Description
+---------|---------|------------
+id       | integer | User id
+email    | string  | User email
+password | integer | User encrypted password
+createdAt| Date    | Datetime when the user was created
+updatedAt| Date    | Datetime when the user was updated last time
+
+#### Example
+    [
+        {
+            "id": 5,
+            "email": "admin@admin.com",
+            "password": "$2a$10$oWRrx0cP0a8wlnpsw1Nn.upV0vHA4njSy4PSjQz61dWPI47FRvOE.",
+            "createdAt": "2021-05-20T22:44:15.000Z",
+            "updatedAt": "2021-05-20T22:44:38.000Z"
+        },
+        {
+            "id": 6,
+            "email": "admin2@admin.com",
+            "password": "$2a$10$oWRrx0cP0a8wlnpsw1Nn.upV0vHA4njSy4PSjQz61dWPI47FRvOE.",
+            "createdAt": "2021-05-20T22:44:15.000Z",
+            "updatedAt": "2021-05-20T22:44:38.000Z"
+        }
+    ]
+
+## Get specific user
+This endpoint return a specific user in the database.
+### Request
+`GET /users/:id`
+
+### Parameters
+* id - User id. Integer
+### Headers
+
+    Authorization: 'Bearer <authorizationtoken>'
+
+### Responses
+#### Status
+* **200** - Ok!
+* **400** - Invalid id
+* **401** - Authorization necessary or token invalid.
+* **404** - There's no such user with provided id
+
+#### Content
+
+Field    |   Type  | Description
+---------|---------|------------
+id       | integer | User id
+email    | string  | User email
+password | integer | User encrypted password
+createdAt| Date    | Datetime when the user was created
+updatedAt| Date    | Datetime when the user was updated last time
+
+#### Example
+    
+    {
+        "id": 5,
+        "email": "admin@admin.com",
+        "password": "$2a$10$oWRrx0cP0a8wlnpsw1Nn.upV0vHA4njSy4PSjQz61dWPI47FRvOE.",
+        "createdAt": "2021-05-20T22:44:15.000Z",
+        "updatedAt": "2021-05-20T22:44:38.000Z"
+    }    
