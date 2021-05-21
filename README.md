@@ -60,14 +60,14 @@ token | string  | The provided user token
 
 # Users
 
-Users resource. All requests to this endpoint shall have the following header(s):
+Users resource. All requests to this endpoint shall have the following headers:
 
 ### Headers
-
-    Authorization: 'Bearer <authorizationtoken>'
+    Authorization: 'Bearer <authtoken>'
 
 ## Get all
 This endpoint return a list of users in the database.
+
 ### Request
 `GET /users`
 
