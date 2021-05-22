@@ -197,7 +197,10 @@ error  | string | Error message
 This endpoint update a user with provided attributes
 
 ### Request
-`PATCH /users`
+`PATCH /users/:id`
+
+### Parameters
+* id - User's id
 
 ### Body
 Example:
