@@ -72,6 +72,7 @@ This endpoint return a list of users in the database.
 `GET /users`
 
 ### Responses
+
 #### Status
 * **200** - Ok!
 * **401** - Authorization necessary or token invalid.
@@ -138,4 +139,46 @@ updatedAt| Date    | Datetime when the user was updated last time
         "password": "$2a$10$oWRrx0cP0a8wlnpsw1Nn.upV0vHA4njSy4PSjQz61dWPI47FRvOE.",
         "createdAt": "2021-05-20T22:44:15.000Z",
         "updatedAt": "2021-05-20T22:44:38.000Z"
+    }
+
+## Create user
+This endpoint insert a user in the database and return it if it was inserted successfully.
+### Request
+`POST /users`
+
+### Responses
+#### Status
+* **201** - Created!
+* **400** - Invalid email or password
+* **401** - Authorization necessary or token invalid.
+* **404** - There's no such user with provided id
+* **409** - It already exists a user with provided email
+* **500** - Server side error when creating the user even though it was valid.
+
+#### Content
+It can either return the inserted user:
+
+Field    |   Type  | Description
+---------|---------|------------
+id       | integer | User id
+email    | string  | User email
+password | integer | User encrypted password
+createdAt| Date    | Datetime when the user was created
+updatedAt| Date    | Datetime when the user was updated last time
+#### Example
+    
+    {
+        "id": 5,
+        "email": "admin@admin.com",
+        "password": "$2a$10$oWRrx0cP0a8wlnpsw1Nn.upV0vHA4njSy4PSjQz61dWPI47FRvOE.",
+        "createdAt": "2021-05-20T22:44:15.000Z",
+        "updatedAt": "2021-05-20T22:44:38.000Z"
     }    
+
+Or return a error message:
+
+#### Example
+
+    {
+        "error": "Email already exist"
+    }
