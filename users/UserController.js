@@ -81,4 +81,51 @@ router.post('/', async(req, res) => {
     }
 });
 
+router.patch('/:id', async (req, res) => {
+    let id = req.params.id;
+
+    if(id == '' || isNaN(id)) {
+        res.status(400);
+        res.json({
+            error: 'Invalid id'
+        });
+    } else {
+    let { email, password } = req.body;
+        if(email == undefined && password == undefined) {
+            res.status(400);
+            res.json({
+                error: 'You need to provide either email or password'
+            });
+        } else {
+
+            let userByEmail = await User.findOne({ where: {email}});
+
+            if(userByEmail == undefined){
+                let user = await User.findOne({ where: {id} });
+
+                if(user == undefined) {
+                    res.status(404);
+                    res.json({
+                        error: `User with id ${id} not found`
+                    });
+                } else {
+
+                    user.email = (email != undefined) ? email : user.email;
+                    user.password = (password != undefined) ? bcrypt.hashSync(password, bcrypt.genSaltSync()) : user.password;
+                    
+                    user.save();
+                    res.json({
+                        user
+                    });
+                }
+            } else {
+                res.status(409);
+                res.json({
+                    error: 'The provided email is already in use'
+                });
+            }
+        }
+    }
+});
+
 module.exports = router;

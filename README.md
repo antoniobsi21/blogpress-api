@@ -146,6 +146,14 @@ This endpoint insert a user in the database and return it if it was inserted suc
 ### Request
 `POST /users`
 
+### Body
+Example:
+
+    {
+        "email": "admin@admin.com",
+        "password": "nodejs"
+    }
+
 ### Responses
 #### Status
 * **201** - Created!
@@ -156,7 +164,7 @@ This endpoint insert a user in the database and return it if it was inserted suc
 * **500** - Server side error when creating the user even though it was valid.
 
 #### Content
-It can either return the inserted user:
+It can either return the inserted user or a error message.
 
 Field    |   Type  | Description
 ---------|---------|------------
@@ -175,7 +183,64 @@ updatedAt| Date    | Datetime when the user was updated last time
         "updatedAt": "2021-05-20T22:44:38.000Z"
     }    
 
-Or return a error message:
+Field  | Type   | Description
+-------|--------|------------
+error  | string | Error message
+
+#### Example
+
+    {
+        "error": "Email already exist"
+    }
+
+## Patch user
+This endpoint update a user with provided attributes
+
+### Request
+`PATCH /users`
+
+### Body
+Example:
+
+    {
+        "email": "admin@admin.com",
+        "password": "nodejs"
+    }
+##### You can ignore one field but not both
+
+<br/>
+
+### Responses
+#### Status
+* **200** - Updated!
+* **400** - Invalid id or missing attributes
+* **401** - Authorization necessary or token invalid.
+* **404** - There's no such user with provided id
+* **409** - It already exists a user with provided email
+
+#### Content
+It can either return the inserted user or a erro.
+
+Field    |   Type  | Description
+---------|---------|------------
+id       | integer | User id
+email    | string  | User email
+password | integer | User encrypted password
+createdAt| Date    | Datetime when the user was created
+updatedAt| Date    | Datetime when the user was updated last time
+#### Example
+    
+    {
+        "id": 5,
+        "email": "admin@admin.com",
+        "password": "$2a$10$oWRrx0cP0a8wlnpsw1Nn.upV0vHA4njSy4PSjQz61dWPI47FRvOE.",
+        "createdAt": "2021-05-20T22:44:15.000Z",
+        "updatedAt": "2021-05-20T22:44:38.000Z"
+    }    
+
+Field  | Type   | Description
+-------|--------|------------
+error  | string | Error message
 
 #### Example
 
