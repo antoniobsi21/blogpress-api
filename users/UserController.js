@@ -82,6 +82,8 @@ router.post('/', async(req, res) => {
 });
 
 router.patch('/:id', async (req, res) => {
+    // Maybe it would be viable to use multiple promises.
+    // While one promise check the email, other promise will check if the id is valid or something.
     let id = req.params.id;
 
     if(id == '' || isNaN(id)) {
@@ -97,10 +99,7 @@ router.patch('/:id', async (req, res) => {
                 error: 'You need to provide either email or password'
             });
         } else {
-
-            let userByEmail = await User.findOne({ where: {email}});
-
-            if(userByEmail == undefined){
+            
                 let user = await User.findOne({ where: {id} });
 
                 if(user == undefined) {
@@ -108,21 +107,27 @@ router.patch('/:id', async (req, res) => {
                     res.json({
                         error: `User with id ${id} not found`
                     });
-                } else {
+                } else {                    
+                    let userByEmail = undefined;
 
-                    user.email = (email != undefined) ? email : user.email;
-                    user.password = (password != undefined) ? bcrypt.hashSync(password, bcrypt.genSaltSync()) : user.password;
+                    if(email != undefined && email != '') {
+                        user.email = email;
+                        userByEmail = await User.findOne({ where: {email}});
+                    }
+
+                    if(userByEmail == undefined){ 
+                        user.password = (password != undefined && password != '') ? bcrypt.hashSync(password, bcrypt.genSaltSync()) : user.password;
                     
-                    user.save();
-                    res.json({
-                        user
-                    });
-                }
-            } else {
-                res.status(409);
-                res.json({
-                    error: 'The provided email is already in use'
-                });
+                        user.save();
+                        res.json({
+                            user
+                        });   
+                    } else {
+                        res.status(409);
+                        res.json({
+                            error: 'The provided email is already in use'
+                        });
+                    }                           
             }
         }
     }

@@ -21,7 +21,6 @@ Then install the required modules:
 and you should be ready to go.
 
 # Blogpress Rest API
-This API is used to manage the blogpress application.
 ## Get auth token
 
 This endpoint returns a token if exist a valid user on the database.

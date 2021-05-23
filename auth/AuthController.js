@@ -25,7 +25,7 @@ router.post('/token', async (req, res) => {
         if(user == undefined) {
             res.status(404);
             res.json({
-                error: 'There\'s no such email on the database'
+                error: 'Invalid email'
             });
         } else if(!bcrypt.compareSync(password, user.password)) {
             res.status(401);
