@@ -77,9 +77,6 @@ router.post('/', async(req, res) => {
 });
 
 router.patch('/:id', async (req, res) => {
-    // Maybe it would be viable to use multiple promises.
-    // While one promise check the email, other promise will check if the id is valid or something.
-    // Promises.all([promise1, promise2, ...promisen]).then((resolves[]) => resolves).catch(errors[] => errors);
     let id = req.params.id;
 
     if(id == '' || isNaN(id)) {
