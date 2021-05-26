@@ -97,34 +97,34 @@ router.patch('/:id', async (req, res) => {
             });
         } else {
             
-                let user = await User.findOne({ where: {id} });
+            let user = await User.findOne({ where: {id} });
 
-                if(user == undefined) {
-                    res.status(404);
+            if(user == undefined) {
+                res.status(404);
+                res.json({
+                    error: `User with id ${id} not found`
+                });
+            } else {                    
+                let userByEmail = undefined;
+
+                if(email != undefined && email != '') {
+                    user.email = email;
+                    userByEmail = await User.findOne({ where: {email}});
+                }
+
+                if(userByEmail == undefined){ 
+                    user.password = (password != undefined && password != '') ? bcrypt.hashSync(password, bcrypt.genSaltSync()) : user.password;
+                
+                    user.save();
                     res.json({
-                        error: `User with id ${id} not found`
+                        user
+                    });   
+                } else {
+                    res.status(409);
+                    res.json({
+                        error: 'The provided email is already in use'
                     });
-                } else {                    
-                    let userByEmail = undefined;
-
-                    if(email != undefined && email != '') {
-                        user.email = email;
-                        userByEmail = await User.findOne({ where: {email}});
-                    }
-
-                    if(userByEmail == undefined){ 
-                        user.password = (password != undefined && password != '') ? bcrypt.hashSync(password, bcrypt.genSaltSync()) : user.password;
-                    
-                        user.save();
-                        res.json({
-                            user
-                        });   
-                    } else {
-                        res.status(409);
-                        res.json({
-                            error: 'The provided email is already in use'
-                        });
-                    }                           
+                }                           
             }
         }
     }

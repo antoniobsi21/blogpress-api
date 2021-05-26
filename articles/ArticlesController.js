@@ -55,86 +55,91 @@ router.post('/', async(req, res) => {
 
         if(category == undefined) {
             res.status(404);
-            res.json({
+            return res.json({
                 error: `Category with id ${categoryId} doesn't exists`
             });
-        } else {
-            let slug = slugify(title);
-            let articleBySlug = await Article.findOne({
-                where: {
-                    slug
-                }
-            });
-            if(articleBySlug == undefined) {
-                Article.create({
-                    title,
-                    slug,
-                    body,
-                    categoryId
-                }).then((article) => {
-                    res.status(201);
-                    res.json(article.get({
-                        plain: true
-                    }));
-                }).catch(error => {
-                    console.log(error);
-                    res.sendStatus(500);
-                })
-            } else {
-                res.status(409);
-                res.json({
-                    error: 'Already exists a article with similar title (same slug)'
-                });
-            }
         }
+        let slug = slugify(title);
+        let articleBySlug = await Article.findOne({
+            where: {
+                slug
+            }
+        });
+        if(articleBySlug == undefined) {
+            Article.create({
+                title,
+                slug,
+                body,
+                categoryId
+            }).then((article) => {
+                res.status(201);
+                return res.json(article.get({
+                    plain: true
+                }));
+            }).catch(error => {
+                console.log(error);
+                return res.sendStatus(500);
+            })
+        }
+        res.status(409);
+        res.json({
+            error: 'Already exists a article with similar title (same slug)'
+        }); 
     }
 });
 
-// router.patch('/:id', async (req, res) => {
-//     let id = req.params.id;
+router.patch('/:id', async (req, res) => {
+    let id = req.params.id;
 
-//     if(id == '' || isNaN(id)) {
-//         res.status(400);
-//         res.json({
-//             error: 'Invalid id'
-//         });
-//     } else {
-//         let { title } = req.body;
-//         if(title == undefined || title == '') {
-//             res.status(400);
-//             res.json({
-//                 error: 'Invalid title'
-//             });
-//         } else {
-//             let article = await Article.findOne({ where: {id} });
+    if(isNaN(id)) {
+        res.status(400);
+        return res.json({
+            error: 'Invalid id'
+        });
+    }
+    let article = await Article.findOne({ where: {id} });
+    
+    if(article == undefined) {
+        res.status(404);
+        return res.json({
+            error: `There's no Article with id ${id}`
+        });
+    }
+    let { title, body, categoryId, blyat } = req.body;
 
-//             if(article == undefined) {
-//                 res.status(404);
-//                 res.json({
-//                     error: `Article with id ${id} not found`
-//                 });
-//             } else {                 
-//                 let getArticleBySlug = undefined;
+    if(title != undefined) {
+        if(title == '') {
+            res.status(400);
+            return res.json({
+                error: 'Invalid title'
+            });
+        }
+        article.title = title;
+        article.slug = slugify(title);
+    }
 
-//                 getArticleBySlug = await Article.findOne({ where: {slug: slugify(title)}});
+    if(categoryId != undefined) {
+        if(isNaN(categoryId)) {
+            res.status(400);
+            return res.json({
+                error: 'Invalid category'
+            });
+        }
+        let getCategoryByCategoryId = await Category.findOne({where: {id: categoryId}});
 
-//                 if(getArticleBySlug == undefined){ 
-//                     article.title = title;
-//                     article.slug = slugify(title);
-                
-//                     article.save();
-//                     res.json({
-//                         article
-//                     });   
-//                 } else {
-//                     res.status(409);
-//                     res.json({
-//                         error: 'Already exists a article with similar title (same slug)'
-//                     });
-//                 }
-//             }                
-//         }
-//     }
-// });
+        if(getCategoryByCategoryId == undefined) {
+            res.status(404);
+            return res.json({
+                error: `There's no Category with id ${categoryId}`
+            })
+        }
+        article.categoryId = categoryId;
+    }
+    article.body = (body != undefined) ? body : article.body;
+    
+    article.save();
+    res.status(200);
+    return res.json(article.get({plain: true}));
+});
 
 module.exports = router;
