@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
 
         return res.json(categories);
     } catch(error) {
-        res.json({error});
+        return res.json({error});
     }
 });
 
@@ -64,6 +64,7 @@ router.post('/', async(req, res) => {
         }
     });
     if(articleBySlug == undefined) {
+        body = (body == undefined) ? '' : body;
         Article.create({
             title,
             slug,
@@ -78,11 +79,12 @@ router.post('/', async(req, res) => {
             console.log(error);
             return res.sendStatus(500);
         })
+    } else {
+        res.status(409);
+        return res.json({
+            error: 'Already exists a article with similar title (same slug)'
+        });
     }
-    res.status(409);
-    return res.json({
-        error: 'Already exists a article with similar title (same slug)'
-    }); 
 });
 
 router.patch('/:id', async (req, res) => {
