@@ -27,6 +27,10 @@ app.use('/auth', authController);
 const usersController = require('./users/UserController');
 app.use('/users', authMiddleware, usersController);
 
+// Categories controller
+const categoriesController = require('./categories/CategoriesController');
+app.use('/categories', authMiddleware, categoriesController);
+
 require('dotenv/config');
 const port = process.env.PORT;
 const host = process.env.HOST;

@@ -3,10 +3,6 @@ const router = express.Router();
 const User = require('./User');
 const bcrypt = require('bcryptjs');
 
-const getAllUsers = async() => {
-    return await User.findAll();
-};
-
 router.get('/', async (req, res) => {
     try{
         let users = await User.findAll();
@@ -84,6 +80,7 @@ router.post('/', async(req, res) => {
 router.patch('/:id', async (req, res) => {
     // Maybe it would be viable to use multiple promises.
     // While one promise check the email, other promise will check if the id is valid or something.
+    // Promises.all([promise1, promise2, ...promisen]).then((resolves[]) => resolves).catch(errors[] => errors);
     let id = req.params.id;
 
     if(id == '' || isNaN(id)) {
@@ -92,7 +89,7 @@ router.patch('/:id', async (req, res) => {
             error: 'Invalid id'
         });
     } else {
-    let { email, password } = req.body;
+        let { email, password } = req.body;
         if(email == undefined && password == undefined) {
             res.status(400);
             res.json({
