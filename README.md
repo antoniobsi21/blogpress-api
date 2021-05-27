@@ -46,7 +46,6 @@ This endpoint returns a token if exist a valid user on the database.
 * **404** - There's no such email on the database
 
 #### Content
-Each client on the list contain the following fields:
 
 Field |   Type  | Description
 ------|---------|------------
@@ -221,7 +220,7 @@ Example:
 * **409** - It already exists a user with provided email
 
 #### Content
-It can either return the inserted user or a erro.
+It can either return the updated user or a error.
 
 Field    |   Type  | Description
 ---------|---------|------------
@@ -248,4 +247,191 @@ error  | string | Error message
 
     {
         "error": "Email already exist"
+    }
+
+# Categories
+
+Categories resource. All requests to this resource shall have the following headers:
+
+### Headers
+    Authorization: 'Bearer <authtoken>'
+
+## Get all
+This endpoint return a list of categories in the database.
+
+### Request
+`GET /categories`
+
+### Responses
+
+#### Status
+* **200** - Ok!
+* **401** - Authorization necessary or token invalid.
+
+#### Content
+Each category on the list contain the following fields:
+
+Field    |   Type  | Description
+---------|---------|------------
+id       | integer | Category id
+title    | string  | Category title
+slug     | integer | Category slug
+createdAt| Date    | Datetime when the category was created
+updatedAt| Date    | Datetime when the category was updated last time
+
+#### Example
+    [
+        {
+        "id": 1,
+        "title": "Programação",
+        "slug": "Programacao",
+        "createdAt": "2021-05-20T22:45:08.000Z",
+        "updatedAt": "2021-05-20T22:45:08.000Z"
+        },
+        {
+        "id": 2,
+        "title": "JavaScript",
+        "slug": "JavaScript",
+        "createdAt": "2021-05-26T17:43:16.000Z",
+        "updatedAt": "2021-05-26T17:53:32.000Z"
+        }
+    ]
+
+## Get specific category
+This endpoint return a specific category in the database.
+### Request
+`GET /categories/:id`
+
+### Parameters
+* id - Category id. Integer
+
+### Responses
+#### Status
+* **200** - Ok!
+* **400** - Invalid id
+* **401** - Authorization necessary or token invalid.
+* **404** - There's no such category with provided id
+
+#### Content
+
+Field    |   Type  | Description
+---------|---------|------------
+id       | integer | Category id
+title    | string  | Category title
+slug     | integer | Category slug
+createdAt| Date    | Datetime when the category was created
+updatedAt| Date    | Datetime when the category was updated last time
+
+#### Example
+    
+    {
+        "id": 2,
+        "title": "JavaScript",
+        "slug": "JavaScript",
+        "createdAt": "2021-05-26T17:43:16.000Z",
+        "updatedAt": "2021-05-26T17:53:32.000Z"
+    }
+
+## Create category
+This endpoint insert a category in the database and return it if it was inserted successfully.
+### Request
+`POST /categories`
+
+### Body
+Example:
+
+    {
+        "title": "JavaScript"
+    }
+
+### Responses
+#### Status
+* **201** - Created!
+* **400** - Invalid title
+* **401** - Authorization necessary or token invalid.
+* **409** - It already exists a category with similar title (slug)
+* **500** - Server side error when creating the user even though it was valid.
+
+#### Content
+It can either return the inserted category or a error message.
+
+Field    |   Type  | Description
+---------|---------|------------
+id       | integer | User id
+email    | string  | User email
+password | integer | User encrypted password
+createdAt| Date    | Datetime when the user was created
+updatedAt| Date    | Datetime when the user was updated last time
+#### Example
+    
+    {
+        "id": 2,
+        "title": "JavaScript",
+        "slug": "JavaScript",
+        "createdAt": "2021-05-26T17:43:16.000Z",
+        "updatedAt": "2021-05-26T17:53:32.000Z"
+    }   
+
+Field  | Type   | Description
+-------|--------|------------
+error  | string | Error message
+
+#### Example
+
+    {
+        "error": "Title invalid"
+    }
+
+## Patch category
+This endpoint update a category with provided attributes
+
+### Request
+`PATCH /categories/:id`
+
+### Parameters
+* id - User's id
+
+### Body
+Example:
+
+    {
+        "title": "JavaScript"
+    }
+
+### Responses
+#### Status
+* **200** - Updated!
+* **400** - Invalid id or title
+* **401** - Authorization necessary or token invalid.
+* **404** - There's no such user with provided id
+* **409** - It already exists a category with similar title (slug).
+
+#### Content
+It can either return the updated category or a error message.
+
+Field    |   Type  | Description
+---------|---------|------------
+id       | integer | User id
+email    | string  | User email
+password | integer | User encrypted password
+createdAt| Date    | Datetime when the user was created
+updatedAt| Date    | Datetime when the user was updated last time
+#### Example
+    
+    {
+        "id": 2,
+        "title": "JavaScript",
+        "slug": "JavaScript",
+        "createdAt": "2021-05-26T17:43:16.000Z",
+        "updatedAt": "2021-05-26T17:53:32.000Z"
+    }   
+
+Field  | Type   | Description
+-------|--------|------------
+error  | string | Error message
+
+#### Example
+
+    {
+        "error": "Title invalid"
     }
