@@ -104,7 +104,7 @@ router.patch('/:id', async (req, res) => {
             error: `There's no Article with id ${id}`
         });
     }
-    let { title, body, categoryId, blyat } = req.body;
+    let { title, body, categoryId } = req.body;
 
     if(title != undefined) {
         if(title == '') {
@@ -113,8 +113,16 @@ router.patch('/:id', async (req, res) => {
                 error: 'Invalid title'
             });
         }
+        let slug = slugify(title);
+        let articleBySlug = await Article.findOne({where: { slug }});
+        if(articleBySlug != undefined) {
+            res.status(409);
+            return res.json({
+                error: 'Already exists a article with similar title (same slug)'
+            });
+        }
         article.title = title;
-        article.slug = slugify(title);
+        article.slug = slug;
     }
 
     if(categoryId != undefined) {

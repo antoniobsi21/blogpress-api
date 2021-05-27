@@ -435,3 +435,219 @@ error  | string | Error message
     {
         "error": "Title invalid"
     }
+
+# Articles
+
+Articles resource. All requests to this resource shall have the following headers:
+
+### Headers
+    Authorization: 'Bearer <authtoken>'
+
+## Get all
+This endpoint return a list of articles in the database.
+
+### Request
+`GET /articles`
+
+### Responses
+
+#### Status
+* **200** - Ok!
+* **401** - Authorization necessary or token invalid.
+
+#### Content
+Each article on the list contain the following fields:
+
+Field      |   Type  | Description
+-----------|---------|------------
+id         | integer | Article id
+title      | string  | Article title
+slug       | integer | Article slug
+body       | string  | Article body
+categoryId | integer | Article category id
+createdAt  | Date    | Datetime when the article was created
+updatedAt  | Date    | Datetime when the article was updated last time
+
+#### Example
+    [
+        {
+            "id": 1,
+            "title": "Article 1",
+            "slug": "Article-1",
+            "body": "Article 1 content",
+            "createdAt": "2021-05-26T21:19:08.000Z",
+            "updatedAt": "2021-05-26T21:19:08.000Z",
+            "categoryId": 2
+        },
+        {
+            "id": 2,
+            "title": "Article 2",
+            "slug": "Article-2",
+            "body": "Article 2 content",
+            "createdAt": "2021-05-26T21:20:52.000Z",
+            "updatedAt": "2021-05-26T21:20:52.000Z",
+            "categoryId": 2
+        }
+    ]
+
+## Get specific article
+This endpoint return a specific article in the database.
+### Request
+`GET /articles/:id`
+
+### Parameters
+* id - Category id. Integer
+
+### Responses
+#### Status
+* **200** - Ok!
+* **400** - Invalid id
+* **401** - Authorization necessary or token invalid.
+* **404** - There's no such article with provided id
+
+#### Content
+
+Field      |   Type  | Description
+-----------|---------|------------
+id         | integer | Article id
+title      | string  | Article title
+slug       | integer | Article slug
+body       | string  | Article body
+categoryId | integer | Article category id
+createdAt  | Date    | Datetime when the article was created
+updatedAt  | Date    | Datetime when the article was updated last time
+
+#### Example
+    
+    {
+        "id": 1,
+        "title": "Article 1",
+        "slug": "Article-1",
+        "body": "Article 1 content",
+        "createdAt": "2021-05-26T21:19:08.000Z",
+        "updatedAt": "2021-05-26T21:19:08.000Z",
+        "categoryId": 2
+    }
+
+## Create article
+This endpoint inserts a article in the database and return it if it was inserted successfully.
+### Request
+
+`POST /articles`
+
+### Body
+Field      |   Type  | Description
+-----------|---------|------------
+title      | string  | Article title
+body       | string  | Article body
+categoryId | integer | Article category id
+
+Example:
+
+    {
+        "title": "What is JavaScript?",
+        "body": "JavaScript is the Programming Language for the Web.",
+        "categoryId": 2
+    }
+
+### Responses
+#### Status
+* **201** - Created!
+* **400** - CategoryId or title invalid
+* **401** - Authorization necessary or token invalid.
+* **409** - It already exists a article with similar title (slug)
+* **500** - Server side error when creating the user even though it was valid.
+
+#### Content
+It can either return the inserted category or a error message.
+
+Field      |   Type  | Description
+-----------|---------|------------
+id         | integer | Article id
+title      | string  | Article title
+slug       | integer | Article slug
+body       | string  | Article body
+categoryId | integer | Article category id
+createdAt  | Date    | Datetime when the article was created
+updatedAt  | Date    | Datetime when the article was updated last time
+
+#### Example
+    
+    {
+        "id": 10,
+        "title": "What is JavaScript (2021 edition)?",
+        "slug": "What-is-JavaScript-(2021-edition)",
+        "body": "JavaScript is the Programming Language for the Web.",
+        "categoryId": 2,
+        "updatedAt": "2021-05-27T17:41:59.510Z",
+        "createdAt": "2021-05-27T17:41:59.510Z"
+    }  
+
+Field  | Type   | Description
+-------|--------|------------
+error  | string | Error message
+
+#### Example
+
+    {
+        "error": "Title or categoryId invalid"
+    }
+
+## Patch category
+This endpoint update a article with provided attributes
+
+### Request
+`PATCH /articles/:id`
+
+### Parameters
+* id - User's id
+
+### Body
+Example:
+
+    {
+        "title": "JavaScripto!"
+    }
+
+### Responses
+#### Status
+* **200** - Updated!
+* **400** - Invalid id, title or category
+* **401** - Authorization necessary or token invalid.
+* **404** - There's no such article with provided id
+* **409** - It already exists a article with similar title (slug).
+
+#### Content
+It can either return the updated article or a error message.
+
+Field      |   Type  | Description
+-----------|---------|------------
+id         | integer | Article id
+title      | string  | Article title
+slug       | integer | Article slug
+body       | string  | Article body
+categoryId | integer | Article category id
+createdAt  | Date    | Datetime when the article was created
+updatedAt  | Date    | Datetime when the article was updated last time
+
+#### Example
+    
+    {
+        "id": 10,
+        "title": "JavaScripto!",
+        "slug": "JavaScripto!",
+        "body": "JavaScript is the Programming Language for the Web.",
+        "createdAt": "2021-05-27T17:41:59.000Z",
+        "updatedAt": "2021-05-27T17:44:07.789Z",
+        "categoryId": 2
+    }
+
+Field  | Type   | Description
+-------|--------|------------
+error  | string | Error message
+
+#### Example
+
+    {
+        "error": "Invalid title"
+    }
