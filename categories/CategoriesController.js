@@ -15,6 +15,8 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id/articles', async (req, res) => {
+    // This route can lead to some unpredictable behaviors like, category 1 is deleted but still exists articles with that category
+    // and thus this route will return status code 404.
     let id = req.params.id;
 
     if(id == undefined || isNaN(id)) {

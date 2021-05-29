@@ -332,6 +332,85 @@ updatedAt| Date    | Datetime when the category was updated last time
         "updatedAt": "2021-05-26T17:53:32.000Z"
     }
 
+## Get articles by categoryId
+This endpoint return a list of articles of specific categoryId.
+
+### Request
+`GET /categories/:id/articles`
+
+### Parameters
+* id - Category id. Integer
+
+### Responses
+#### Status
+* **200** - Ok!
+* **400** - Invalid id
+* **401** - Authorization necessary or token invalid.
+* **404** - There's no such category with provided id
+
+#### Content
+It can either return a Category and a list of Articles, or a error.
+
+#### Category:
+Field    |   Type  | Description
+---------|---------|------------
+id       | integer | Category id
+title    | string  | Category title
+slug     | integer | Category slug
+createdAt| Date    | Datetime when the category was created
+updatedAt| Date    | Datetime when the category was updated last time
+
+
+Each article of the list will be like:
+#### Article:
+Field      |   Type  | Description
+-----------|---------|------------
+id         | integer | Article id
+title      | string  | Article title
+slug       | integer | Article slug
+body       | string  | Article body
+categoryId | integer | Article category id
+createdAt  | Date    | Datetime when the article was created
+updatedAt  | Date    | Datetime when the article was updated last time
+
+#### Example
+    
+    {
+    "category": {
+        "id": 2,
+        "title": "JavaScript",
+        "slug": "JavaScript",
+        "createdAt": "2021-05-26T17:43:16.000Z",
+        "updatedAt": "2021-05-26T17:53:32.000Z"
+    },
+    "articles": [
+            {
+            "id": 1,
+            "title": "What is JavaScript?",
+            "slug": "What-is-JavaScript",
+            "body": "JavaScript is a scripting or programming language that allows you to implement complex features on web pages — every time a web page does more than just sit there and display static information for you to look at — displaying timely content updates, interactive maps, animated 2D/3D graphics, scrolling video jukeboxes, etc. — you can bet that JavaScript is probably involved. It is the third layer of the layer cake of standard web technologies, two of which (HTML and CSS) we have covered in much more detail in other parts of the Learning Area.",
+            "createdAt": "2021-05-20T22:47:32.000Z",
+            "updatedAt": "2021-05-26T21:09:57.000Z",
+            "categoryId": 2
+            },
+            {
+            "id": 3,
+            "title": "O que hacer manito?",
+            "slug": "O-que-hacer-manito",
+            "body": "How am i suppose to know?",
+            "createdAt": "2021-05-26T21:16:04.000Z",
+            "updatedAt": "2021-05-26T21:16:04.000Z",
+            "categoryId": 2
+            }
+        ]
+    }
+    
+Or: 
+
+    {
+        "error": "Category with id 12 doesn't exist."
+    }
+
 ## Create category
 This endpoint insert a category in the database and return it if it was inserted successfully.
 ### Request
