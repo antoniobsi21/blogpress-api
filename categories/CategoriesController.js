@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Category = require('./Category');
+const Article = require('../articles/Article');
 const slugify = require('slugify');
 
 router.get('/', async (req, res) => {
@@ -13,29 +14,59 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id/articles', async (req, res) => {
+    let id = req.params.id;
+
+    if(id == undefined || isNaN(id)) {
+        res.status(400);
+        return res.json({
+            error: 'Invalid id'
+        });
+    }
+
+    let articles = await Article.findAll({
+        where: {
+            categoryId: id
+        }
+    });
+    let category = await Category.findOne({
+        where: {
+            id
+        }
+    });
+    if(category == undefined) {
+        res.status(404);
+        return res.json({
+            error: `Category with id ${id} doesn't exist.`
+        })
+    }
+    res.status(200);
+    return res.json({category, articles});
+});
+
 router.get('/:id', async (req, res) => {
     let id = req.params.id;
 
     if(id == undefined || isNaN(id)) {
         res.status(400);
-        res.json({
+        return res.json({
             error: 'Invalid id'
         });
-    } else {
-        let category = await Category.findOne({
-            where: {
-                id
-            }
-        });
-        if(category == undefined) {
-            res.status(404);
-            res.json({
-                error: `Category with id ${id} doesn't exist.`
-            });
-        } else {
-            res.status(200);
-            res.json(category);
+    }
+
+    let category = await Category.findOne({
+        where: {
+            id
         }
+    });
+    if(category == undefined) {
+        res.status(404);
+        return res.json({
+            error: `Category with id ${id} doesn't exist.`
+        });
+    } else {
+        res.status(200);
+        return res.json(category);
     }
 });
 

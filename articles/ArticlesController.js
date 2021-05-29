@@ -6,6 +6,7 @@ const Category = require('../categories/Category');
 
 router.get('/', async (req, res) => {
     try{
+        
         let categories = await Article.findAll();
 
         return res.json(categories);
